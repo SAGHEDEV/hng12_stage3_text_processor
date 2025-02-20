@@ -50,7 +50,7 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
         });
       } else {
         throw new Error(
-          result?.message || "Translation failed. Please try again."
+          result?.message || "Translation failed. Kindly try again."
         );
       }
     } catch (error: any) {
@@ -64,7 +64,15 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
     setSummaryLoading(true);
     try {
       const result = await handleSummarizeText(chat.message);
-      console.log(result);
+      if (result?.success) {
+        updateMessage(index, {
+          summary: result.message,
+        });
+      } else {
+        throw new Error(
+          result?.message || "Summarization failed. Kindly try again."
+        );
+      }
     } catch (error: any) {
       console.log(error);
       setSummarizerError(
