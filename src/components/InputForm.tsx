@@ -17,7 +17,7 @@ const InputForm = () => {
     if (response?.success) {
       const messageObject = {
         message: message,
-        lang: response.message,
+        lang: response.message as string,
         date: new Date(),
       };
       addMessage(messageObject);

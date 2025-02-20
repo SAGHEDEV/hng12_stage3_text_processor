@@ -46,7 +46,10 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
 
       if (result?.success) {
         updateMessage(index, {
-          translate: { result: result.message, lang: selectedLanguage },
+          translate: {
+            result: result.message as string,
+            lang: selectedLanguage,
+          },
         });
       } else {
         throw new Error(

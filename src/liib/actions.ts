@@ -8,13 +8,22 @@ export const handleTranslateLanguage = async ({
   message: string;
   targetLanguage: string;
   sourceLanguage: string;
-}) => {
-  if (!("ai" in self) || !("translator" in self.ai)) {
-    console.error("AI Translator API not available.");
-    return null;
+}): Promise<{ success: boolean; message: string | null }> => {
+  const ai = (self as { ai?: any }).ai;
+  if (!ai) {
+    console.error("AI API not available.");
+    return {
+      success: false,
+      message: "This seems to be unaccessible on your device",
+    };
   }
 
-  const translatorCapabilities = await self.ai.translator.capabilities();
+  if (!ai?.translator) {
+    console.error("AI Translator API not available.");
+    return { success: false, message: "Translation API is not available" };
+  }
+
+  const translatorCapabilities = await ai.translator.capabilities();
   const isAvailable = translatorCapabilities.languagePairAvailable(
     sourceLanguage,
     targetLanguage
@@ -22,7 +31,7 @@ export const handleTranslateLanguage = async ({
 
   console.log("Is Language Pair Available?:", isAvailable);
 
-  let translator;
+  let translator: any;
 
   if (isAvailable === "no") {
     console.error("Translation not available for this language pair.");
@@ -31,23 +40,21 @@ export const handleTranslateLanguage = async ({
       message: "Translation not available for this language pair!",
     };
   } else if (isAvailable === "after-download") {
-    translator = await self.ai.translator.create({
-      sourceLanguage: sourceLanguage,
-      targetLanguage: targetLanguage,
+    translator = await ai.translator.create({
+      sourceLanguage,
+      targetLanguage,
       monitor: (m: EventTarget) => {
-        m.addEventListener("downloadprogress", (e: any) => {
-          console.log(`Downloading model: ${e.loaded} of ${e.total} bytes.`);
+        m.addEventListener("downloadprogress", (e) => {
+          const event = e as ProgressEvent<EventTarget>;
+          console.log(`Downloading: ${event.loaded} of ${event.total} bytes.`);
         });
       },
     });
   } else {
-    translator = await self.ai.translator.create({
-      sourceLanguage: sourceLanguage,
-      targetLanguage: targetLanguage,
-    });
+    translator = await ai.translator.create({ sourceLanguage, targetLanguage });
   }
 
-  const result = await translator.translate(message);
+  const result: string = await translator.translate(message);
   console.log("Translation Result:", result || "null");
 
   return { success: true, message: result };
@@ -57,62 +64,71 @@ export const handlegetLanguageType = async ({
   message,
 }: {
   message: string;
-}) => {
-  if (!("ai" in self) || !("languageDetector" in self.ai)) {
-    console.error("AI Translator API not available.");
-    return null;
-  }
-
-  const languageDetectorCapabilities =
-    await self.ai.languageDetector.capabilities();
-  const isAvailable = languageDetectorCapabilities.languageAvailable("en");
-
-  let detector;
-
-  if (isAvailable === "no") {
-    console.error("Translation not available for this language pair.");
+}): Promise<{ success: boolean; message: string | null }> => {
+  const ai = (self as { ai?: any }).ai;
+  if (!ai) {
+    console.error("AI API not available.");
     return {
       success: false,
-      message: "Translation not available for this language pair!",
+      message: "This seems to be unaccessible on your device",
     };
   }
+
+  if (!ai?.languageDetector) {
+    console.error("AI Translator API not available.");
+    return { success: false, message: "Translation API is not available" };
+  }
+
+  const languageDetectorCapabilities = await ai.languageDetector.capabilities();
+  const isAvailable = languageDetectorCapabilities.languageAvailable("en");
+
+  let detector: any;
+
+  if (isAvailable === "no") {
+    console.error("Language detection not available.");
+    return { success: false, message: "Language detection not available!" };
+  }
   if (isAvailable === "readily") {
-    detector = await self.ai.languageDetector.create();
+    detector = await ai.languageDetector.create();
   } else {
-    detector = await self.ai.languageDetector.create({
-      monitor(m) {
+    detector = await ai.languageDetector.create({
+      monitor(m: EventTarget) {
         m.addEventListener("downloadprogress", (e) => {
-          console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
+          const event = e as ProgressEvent<EventTarget>;
+          console.log(`Downloading: ${event.loaded} of ${event.total} bytes.`);
         });
       },
     });
     await detector.ready;
   }
-  const results = await detector.detect(message);
-  return {
-    success: true,
-    message: results[0].detectedLanguage,
-  };
+  const results: { detectedLanguage: string }[] = await detector.detect(
+    message
+  );
+  return { success: true, message: results[0].detectedLanguage };
 };
 
-export const handleSummarizeText = async (message: string) => {
-  if (!("ai" in self) && !("summarizer" in self.ai)) {
-    console.error("AI Summarization API not available.");
+export const handleSummarizeText = async (
+  message: string
+): Promise<{ success: boolean; message: string }> => {
+  const ai = (self as { ai?: any }).ai;
+  if (!ai) {
+    console.error("AI API not available.");
     return {
       success: false,
-      message: "AI Summarization API not available.",
+      message: "This seems to be unaccessible on your device",
     };
   }
-  const summaraizeCapability = await self.ai.summarizer.capabilities();
+
+  if (!ai?.summarizer) {
+    console.error("AI Summarization API not available.");
+    return { success: false, message: "AI Summarization API not available." };
+  }
+  const summaraizeCapability = await ai.summarizer.capabilities();
   const isAvailable = summaraizeCapability.available;
   console.log(isAvailable);
-  const options = {
-    type: "key-points",
-    format: "markdown",
-    length: "medium",
-  };
+  const options = { type: "key-points", format: "markdown", length: "medium" };
 
-  let summarizer;
+  let summarizer: any;
   if (isAvailable === "no") {
     console.error("Summarization not available for this device.");
     return {
@@ -121,12 +137,13 @@ export const handleSummarizeText = async (message: string) => {
     };
   }
   if (isAvailable === "readily") {
-    summarizer = await self.ai.summarizer.create(options);
+    summarizer = await ai.summarizer.create(options);
   } else {
     console.log("downloading...");
-    summarizer = await self.ai.summarizer.create({
-      monitor: (monitor: any) => {
-        monitor.addEventListener("downloadprogress", (event: any) => {
+    summarizer = await ai.summarizer.create({
+      monitor: (m: EventTarget) => {
+        m.addEventListener("downloadprogress", (e) => {
+          const event = e as ProgressEvent<EventTarget>;
           console.log(
             `Downloading: ${event.loaded} of ${event.total} bytes (${(
               (event.loaded / event.total) *
@@ -137,14 +154,15 @@ export const handleSummarizeText = async (message: string) => {
       },
     });
     await summarizer.ready;
-    summarizer = await self.ai.summarizer.create(options);
+    summarizer = await ai.summarizer.create(options);
   }
 
-  const result = await summarizer.summarize(message);
+  const result: string = await summarizer.summarize(message);
   console.log(result);
+  return { success: true, message: result };
 };
 
-export const handleDetectFullLanguage = (code: string) => {
+export const handleDetectFullLanguage = (code: string): string => {
   const languages: Record<string, string> = {
     en: "English",
     es: "Spanish",
@@ -189,18 +207,17 @@ export const handleDetectFullLanguage = (code: string) => {
   return languages[code] || "Unknown Language";
 };
 
-export const handleCopy = async (text: string | undefined) => {
-  await window.navigator.clipboard.writeText(text as string);
+export const handleCopy = async (text: string | undefined): Promise<void> => {
+  await window.navigator.clipboard.writeText(text ?? "");
 };
 
 export const formatCustomDate = (date: Date): string => {
-  const formattedTime = format(date, "hh:mm a"); // 09:02 PM format
-
+  const formattedTime = format(date, "hh:mm a");
   if (isToday(date)) {
     return `${formattedTime} Today`;
   } else if (isYesterday(date)) {
     return `${formattedTime} Yesterday`;
   } else {
-    return `${formattedTime} ${format(date, "dd/MM/yyyy")}`; // 09:02 PM 12/02/2025
+    return `${formattedTime} ${format(date, "dd/MM/yyyy")}`;
   }
 };
