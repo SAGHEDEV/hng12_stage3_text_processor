@@ -1,7 +1,8 @@
-import InputForm from "../components/InputForm";
-import { useMessagesStore } from "../zustand";
-import MessageBox from "../components/MessageBox";
+import InputForm from "../../components/InputForm";
+import { useMessagesStore } from "../../zustand";
+import MessageBox from "../../components/MessageBox";
 import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 const TextProcessor = () => {
   const messages = useMessagesStore((store) => store.messages);
@@ -27,9 +28,14 @@ const TextProcessor = () => {
           <img src="/assets/book-logo.svg" alt="" className="w-8 h-8" />
           <span className="text-white">TextEase</span>
         </h1>
-        <button className="hidden md:block px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer">
+        <Link
+          to={
+            "https://devlink-liart.vercel.app/share/QpXIaLYWSqaUwIRMGHIFowVtgt13"
+          }
+          className="hidden md:block px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer"
+        >
           Contact Developer
-        </button>
+        </Link>
       </div>
 
       <div

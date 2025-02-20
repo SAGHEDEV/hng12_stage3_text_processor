@@ -1,5 +1,5 @@
 import { RecoilRoot } from "recoil";
-import TextProcessor from "./pages";
+import TextProcessor from "./pages/main";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomeScreen from "./pages/welcome";
 

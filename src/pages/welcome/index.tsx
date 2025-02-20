@@ -40,12 +40,20 @@ const HomeScreen = () => {
           in one intuitive interface!
         </p>
         <div className="flex flex-col md:flex-row justify-center items-center gap-5">
-          <button className=" px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer">
+          <Link
+            to={"/main"}
+            className=" px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer"
+          >
             Get Started
-          </button>
-          <button className=" px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer">
+          </Link>
+          <Link
+            to={
+              "https://devlink-liart.vercel.app/share/QpXIaLYWSqaUwIRMGHIFowVtgt13"
+            }
+            className="hidden md:block px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer"
+          >
             Contact Developer
-          </button>
+          </Link>
         </div>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center items-center gap-10">
