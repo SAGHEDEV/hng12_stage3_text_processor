@@ -11,7 +11,6 @@ export const handleTranslateLanguage = async ({
 }): Promise<{ success: boolean; message: string | null }> => {
   const ai = (self as { ai?: any }).ai;
   if (!ai) {
-    console.error("AI API not available.");
     return {
       success: false,
       message: "This seems to be unaccessible on your device",
@@ -19,7 +18,6 @@ export const handleTranslateLanguage = async ({
   }
 
   if (!ai?.translator) {
-    console.error("AI Translator API not available.");
     return { success: false, message: "Translation API is not available" };
   }
 
@@ -29,12 +27,9 @@ export const handleTranslateLanguage = async ({
     targetLanguage
   );
 
-  console.log("Is Language Pair Available?:", isAvailable);
-
   let translator: any;
 
   if (isAvailable === "no") {
-    console.error("Translation not available for this language pair.");
     return {
       success: false,
       message: "Translation not available for this language pair!",
@@ -55,8 +50,6 @@ export const handleTranslateLanguage = async ({
   }
 
   const result: string = await translator.translate(message);
-  console.log("Translation Result:", result || "null");
-
   return { success: true, message: result };
 };
 
@@ -67,7 +60,6 @@ export const handlegetLanguageType = async ({
 }): Promise<{ success: boolean; message: string | null }> => {
   const ai = (self as { ai?: any }).ai;
   if (!ai) {
-    console.error("AI API not available.");
     return {
       success: false,
       message: "This seems to be unaccessible on your device",
@@ -75,8 +67,10 @@ export const handlegetLanguageType = async ({
   }
 
   if (!ai?.languageDetector) {
-    console.error("AI Translator API not available.");
-    return { success: false, message: "Translation API is not available" };
+    return {
+      success: false,
+      message: "Language detector API is not available!",
+    };
   }
 
   const languageDetectorCapabilities = await ai.languageDetector.capabilities();
@@ -85,7 +79,6 @@ export const handlegetLanguageType = async ({
   let detector: any;
 
   if (isAvailable === "no") {
-    console.error("Language detection not available.");
     return { success: false, message: "Language detection not available!" };
   }
   if (isAvailable === "readily") {
@@ -112,7 +105,6 @@ export const handleSummarizeText = async (
 ): Promise<{ success: boolean; message: string }> => {
   const ai = (self as { ai?: any }).ai;
   if (!ai) {
-    console.error("AI API not available.");
     return {
       success: false,
       message: "This seems to be unaccessible on your device",
@@ -120,17 +112,14 @@ export const handleSummarizeText = async (
   }
 
   if (!ai?.summarizer) {
-    console.error("AI Summarization API not available.");
     return { success: false, message: "AI Summarization API not available." };
   }
   const summaraizeCapability = await ai.summarizer.capabilities();
   const isAvailable = summaraizeCapability.available;
-  console.log(isAvailable);
   const options = { type: "key-points", format: "markdown", length: "medium" };
 
   let summarizer: any;
   if (isAvailable === "no") {
-    console.error("Summarization not available for this device.");
     return {
       success: false,
       message: "Summarization not available for this device.",
@@ -139,7 +128,6 @@ export const handleSummarizeText = async (
   if (isAvailable === "readily") {
     summarizer = await ai.summarizer.create(options);
   } else {
-    console.log("downloading...");
     summarizer = await ai.summarizer.create({
       monitor: (m: EventTarget) => {
         m.addEventListener("downloadprogress", (e) => {
@@ -158,7 +146,6 @@ export const handleSummarizeText = async (
   }
 
   const result: string = await summarizer.summarize(message);
-  console.log(result);
   return { success: true, message: result };
 };
 

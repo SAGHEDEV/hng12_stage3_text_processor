@@ -21,6 +21,8 @@ const InputForm = () => {
         date: new Date(),
       };
       addMessage(messageObject);
+    } else {
+      alert(response.message || "Browser not supported!");
     }
     setMessage("");
   };
