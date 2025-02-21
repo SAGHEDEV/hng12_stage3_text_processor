@@ -35,7 +35,7 @@ const HomeScreen = () => {
         <p className="text-lg font-semibold text-center">
           Your 99.9% accurate AI Text processor!
         </p>
-        <p className="text-sm text-gray-200">
+        <p className="text-sm text-gray-200 text-center">
           Effortlessly process, understand, and communicate across languages—all
           in one intuitive interface!
         </p>
@@ -51,7 +51,7 @@ const HomeScreen = () => {
               "https://devlink-liart.vercel.app/share/QpXIaLYWSqaUwIRMGHIFowVtgt13"
             }
             target="blank"
-            className="hidden md:block px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer"
+            className=" px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer"
           >
             Contact Developer
           </Link>

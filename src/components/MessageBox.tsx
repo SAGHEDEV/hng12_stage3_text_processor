@@ -110,7 +110,7 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
           <p className="font-medium">Your message: </p>
           <span
             aria-label="Listen to my message"
-            className="inline-block !p-1 rounded-full bg-white/20 text-[#FF9D00]/70 hover:text-[#FF9D00] cursor-pointer"
+            className="inline-block !p-1 rounded-full bg-white/20 text-[#FF9D00] hover:text-[#FF9D00]/70 cursor-pointer"
             onClick={speechStatus !== "started" ? start : stop}
           >
             {speechStatus === "started" ? <FaRegCircleStop /> : <GiSpeaker />}
@@ -188,7 +188,7 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
           <span
             aria-label="Copy Translation"
             onClick={async () => await handleCopy(chat.translate?.result)}
-            className="!p-1 rounded-full bg-white/20 text-[#FF9D00]/70 hover:text-[#FF9D00] cursor-pointer absolute top-2 right-2"
+            className="!p-1 rounded-full bg-white/20 text-[#FF9D00] hover:text-[#FF9D00]/70 cursor-pointer absolute top-2 right-2"
           >
             <IoIosCopy />
           </span>
