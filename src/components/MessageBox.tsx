@@ -11,6 +11,7 @@ import { IoIosCopy } from "react-icons/io";
 import { GiSpeaker } from "react-icons/gi";
 import { FaRegCircleStop } from "react-icons/fa6";
 import { useSpeech } from "react-text-to-speech";
+import { RiDeleteBin2Fill } from "react-icons/ri";
 
 const languages = [
   { code: "en", name: "English" },
@@ -23,6 +24,7 @@ const languages = [
 
 const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
   const updateMessage = useMessagesStore((state) => state.updateMessage);
+  const deleteMessage = useMessagesStore((state) => state.deleteMessage);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
   const [translateError, setTranslateError] = useState("");
   const [summarizerError, setSummarizerError] = useState("");
@@ -93,7 +95,16 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
 
   return (
     <div className="w-full !p-3 bg-white/5 rounded-xl flex flex-col gap-3 border-b-2 border-r-2 border-gray-100/50">
-      <time className="text-[10px]">{formatCustomDate(chat.date)}</time>
+      <div className="flex justify-between items-center gap-12">
+        <time className="text-[10px]">{formatCustomDate(chat.date)}</time>
+        <span
+          aria-label="Listen to my message"
+          className="inline-block !p-1 rounded-full bg-white/20 text-red-600 cursor-pointer"
+          onClick={() => deleteMessage(index)}
+        >
+          <RiDeleteBin2Fill />
+        </span>
+      </div>
       <div className="!p-2 bg-white/10 rounded-lg">
         <div className="mb-2 flex items-center gap-3 !py-2">
           <p className="font-medium">Your message: </p>
@@ -120,7 +131,7 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
           {chat.lang === "en" && chat.message.trim().length > 150 && (
             <button
               onClick={handleSummarizeMessage}
-              className="px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-white font-semibold cursor-pointer"
+              className="px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-white font-semibold cursor-pointer active:scale-95"
             >
               Summarize
             </button>
@@ -152,7 +163,7 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
             </div>
             <button
               onClick={handleTranslateMessage}
-              className="px-5 py-3 h-fit rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-white font-semibold cursor-pointer"
+              className="px-5 py-3 h-fit rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-white font-semibold cursor-pointer active:scale-95"
             >
               Translate
             </button>

@@ -50,6 +50,7 @@ const HomeScreen = () => {
             to={
               "https://devlink-liart.vercel.app/share/QpXIaLYWSqaUwIRMGHIFowVtgt13"
             }
+            target="blank"
             className="hidden md:block px-5 py-3 rounded-lg bg-[#FF9D00] hover:bg-[#e68a00] text-sm text-white font-semibold cursor-pointer"
           >
             Contact Developer

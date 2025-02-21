@@ -16,6 +16,7 @@ type messagesStore = {
     value: { translate?: { result: string; lang: string }; summary?: string }
   ) => void;
   loadMessages: () => void;
+  deleteMessage: (index: number) => void;
 };
 
 export const useMessagesStore = create<messagesStore>((set) => ({
@@ -23,6 +24,14 @@ export const useMessagesStore = create<messagesStore>((set) => ({
   addMessage: (message) =>
     set((state) => {
       const newMessages = [...state.messages, message];
+      sessionStorage.setItem("messages", JSON.stringify(newMessages));
+      return { messages: newMessages };
+    }),
+  deleteMessage: (index) =>
+    set((state) => {
+      const newMessages = state.messages.filter(
+        (message, messIndex) => messIndex !== index
+      );
       sessionStorage.setItem("messages", JSON.stringify(newMessages));
       return { messages: newMessages };
     }),
