@@ -99,7 +99,7 @@ const MessageBox = ({ chat, index }: { chat: messageStore; index: number }) => {
         <time className="text-[10px]">{formatCustomDate(chat.date)}</time>
         <span
           aria-label="Listen to my message"
-          className="inline-block !p-1 rounded-full bg-white/20 text-red-600 cursor-pointer"
+          className="inline-block !p-1 rounded-full bg-white text-red-600 cursor-pointer"
           onClick={() => deleteMessage(index)}
         >
           <RiDeleteBin2Fill />
