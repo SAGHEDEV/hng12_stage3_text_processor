@@ -30,7 +30,7 @@ export const useMessagesStore = create<messagesStore>((set) => ({
   deleteMessage: (index) =>
     set((state) => {
       const newMessages = state.messages.filter(
-        (message, messIndex) => messIndex !== index
+        (_, messIndex) => messIndex !== index
       );
       sessionStorage.setItem("messages", JSON.stringify(newMessages));
       return { messages: newMessages };
